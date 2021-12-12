@@ -57,7 +57,8 @@ pub mod assets {
     pub mod mesh {
         use super::*;
 
-        #[derive(Clone, Debug, Deserialize, Serialize)]
+        #[derive(Clone, Copy, Debug, Deserialize, Serialize, Pod, Zeroable)]
+        #[repr(C)]
         pub struct Vertex {
             pub position: [f32; 3],
         }

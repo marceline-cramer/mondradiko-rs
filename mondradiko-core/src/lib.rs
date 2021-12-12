@@ -23,12 +23,7 @@ pub type EventHandler = Box<dyn FnMut(&[u8])>;
 
 pub trait ScriptApi {
     /// Loads an asset
-    fn load_asset(
-        &mut self,
-        asset_type: AssetType,
-        id: AssetId,
-        data: &[u8],
-    ) -> ScriptResult<AssetId>;
+    fn load_asset(&mut self, asset_type: AssetType, data: &[u8]) -> ScriptResult<AssetId>;
 
     /// Retrieves an asset type by name
     fn get_asset_type(&self, name: &str) -> ScriptResult<AssetType>;
@@ -61,7 +56,7 @@ pub trait ScriptInstance {
 
 #[derive(Default)]
 struct LabelStore {
-    labels: HashMap<AssetId, assets::label::LabelAsset>,
+    labels: slab::Slab<assets::label::LabelAsset>,
 }
 
 struct LabelLoader {
@@ -69,9 +64,10 @@ struct LabelLoader {
 }
 
 impl AssetLoader for LabelLoader {
-    fn load_asset(&mut self, id: AssetId, data: &[u8]) -> Result<AssetId, ()> {
+    fn load_asset(&mut self, data: &[u8]) -> Result<AssetId, ()> {
         if let Ok(asset) = bincode::deserialize(data) {
-            self.store.lock().unwrap().labels.insert(id, asset);
+            let index = self.store.lock().unwrap().labels.insert(asset);
+            let id = AssetId(index as u32);
             Ok(id)
         } else {
             Err(())
@@ -131,13 +127,14 @@ impl Core {
             entities.insert(e);
         }
 
+        println!("entities:");
         for entity in entities.iter() {
-            println!("{:?}", entity);
+            println!("  {:?}", entity);
             if let Some(position) = positions.get(entity) {
-                println!("  {:?}", position);
+                println!("    {:?}", position);
             }
             if let Some(label) = labels.get(entity) {
-                println!("  {:?}", label);
+                println!("    {:?}", label);
             }
         }
     }
@@ -176,16 +173,11 @@ impl BasicCoreApi {
 }
 
 impl ScriptApi for BasicCoreApi {
-    fn load_asset(
-        &mut self,
-        asset_type: AssetType,
-        id: AssetId,
-        data: &[u8],
-    ) -> ScriptResult<AssetId> {
+    fn load_asset(&mut self, asset_type: AssetType, data: &[u8]) -> ScriptResult<AssetId> {
         self.core
             .asset_store
             .borrow_mut()
-            .load_asset(id, asset_type, data)
+            .load_asset(asset_type, data)
     }
 
     fn get_asset_type(&self, name: &str) -> ScriptResult<AssetType> {

@@ -3,7 +3,7 @@ use slab::Slab;
 use std::collections::HashMap;
 
 pub trait AssetLoader {
-    fn load_asset(&mut self, id: AssetId, data: &[u8]) -> Result<AssetId, ()>;
+    fn load_asset(&mut self, data: &[u8]) -> Result<AssetId, ()>;
 }
 
 #[derive(Default)]
@@ -38,15 +38,10 @@ impl AssetStore {
         }
     }
 
-    pub fn load_asset(
-        &mut self,
-        id: AssetId,
-        asset_type: AssetType,
-        data: &[u8],
-    ) -> Result<AssetId, ()> {
+    pub fn load_asset(&mut self, asset_type: AssetType, data: &[u8]) -> Result<AssetId, ()> {
         let loader_index = asset_type.0 as usize;
         if let Some(loader) = self.loaders.get_mut(loader_index) {
-            let id = loader.load_asset(id, data);
+            let id = loader.load_asset(data);
             if let Ok(id) = id {
                 self.type_index.insert(id, asset_type);
             }
