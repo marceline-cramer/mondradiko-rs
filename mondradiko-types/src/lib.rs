@@ -3,6 +3,12 @@ pub struct AssetType(u32);
 pub struct ComponentId(u32);
 pub struct EntityId(u32);
 
+pub mod events {
+    pub struct UpdateEvent {
+        // TODO delta-time member
+    }
+}
+
 pub mod components {
     use super::*;
 
