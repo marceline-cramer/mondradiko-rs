@@ -1,1 +1,1 @@
-initSidebarItems({"mod":[["assets",""],["components",""]],"struct":[["AssetId",""],["AssetType",""],["ComponentId",""],["EntityId",""]]});
+initSidebarItems({"mod":[["assets",""],["components",""],["events",""]],"struct":[["AssetId",""],["AssetType",""],["ComponentId",""],["EntityId",""]]});
