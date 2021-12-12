@@ -1,7 +1,8 @@
-pub struct AssetId(u32);
-pub struct AssetType(u32);
-pub struct ComponentId(u32);
-pub struct EntityId(u32);
+use mondradiko_types::*;
+
+pub struct EventType(u32);
+pub struct ResourceId(u32);
+
 pub type ScriptError = ();
 pub type ScriptResult<T> = Result<T, ScriptError>;
 
@@ -20,6 +21,15 @@ pub trait ScriptApi {
     /// Deletes components
     fn delete_components(&mut self, component: ComponentId, entities: &[EntityId]);
 
+    /// Retrieves a resource ID by name
+    fn get_resource_id(&self, name: &str) -> ScriptResult<ResourceId>;
+
+    /// Writes a resource
+    fn write_resource(&mut self, id: ResourceId, data: &[u8]);
+
+    /// Retrieves an event type by name
+    fn get_event_type(&self, name: &str) -> ScriptResult<EventType>;
+
     /// Registers an event handler
-    fn register_event_handler(&mut self, event_name: &str, handler: EventHandler);
+    fn register_event_handler(&mut self, event_type: EventType, handler: EventHandler);
 }
