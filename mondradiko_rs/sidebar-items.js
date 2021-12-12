@@ -1,1 +1,1 @@
-initSidebarItems({"fn":[["main",""]],"mod":[["api",""]]});
+initSidebarItems({"fn":[["main",""]]});

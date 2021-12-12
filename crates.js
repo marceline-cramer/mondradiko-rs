@@ -1,1 +1,1 @@
-window.ALL_CRATES = ["mondradiko_rs","mondradiko_types"];
+window.ALL_CRATES = ["mondradiko_core","mondradiko_rs","mondradiko_types"];
