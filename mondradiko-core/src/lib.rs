@@ -1,8 +1,11 @@
-use components::Position;
+pub use bincode;
+
+use components::{Label, Position};
 use mondradiko_types::*;
-use std::cell::RefCell;
+use std::cell::{RefCell, RefMut};
 use std::collections::HashMap;
 use std::sync::Arc;
+use std::sync::Mutex;
 
 pub mod asset;
 
@@ -57,13 +60,49 @@ pub trait ScriptInstance {
 }
 
 #[derive(Default)]
+struct LabelStore {
+    labels: HashMap<AssetId, assets::label::LabelAsset>,
+}
+
+struct LabelLoader {
+    store: Arc<Mutex<LabelStore>>,
+}
+
+impl AssetLoader for LabelLoader {
+    fn load_asset(&mut self, id: AssetId, data: &[u8]) -> Result<AssetId, ()> {
+        if let Ok(asset) = bincode::deserialize(data) {
+            self.store.lock().unwrap().labels.insert(id, asset);
+            Ok(id)
+        } else {
+            Err(())
+        }
+    }
+}
+
+#[derive(Default)]
 pub struct Core {
     scripts: RefCell<Vec<Box<dyn ScriptInstance>>>,
     positions: RefCell<HashMap<EntityId, Position>>,
+    labels: RefCell<HashMap<EntityId, Label>>,
     asset_store: RefCell<AssetStore>,
+    label_store: Arc<Mutex<LabelStore>>,
 }
 
 impl Core {
+    pub fn new() -> Self {
+        let core = Self::default();
+
+        let label_loader = LabelLoader {
+            store: core.label_store.clone(),
+        };
+        core.asset_store
+            .borrow_mut()
+            .add_loader("label", Box::new(label_loader))
+            .unwrap();
+
+        core
+    }
+
     pub fn add_script(&self, script: Box<dyn ScriptInstance>) {
         self.scripts.borrow_mut().push(script);
     }
@@ -79,10 +118,26 @@ impl Core {
             script.handle_event(event_type, event);
         }
 
-        if self.positions.borrow().len() > 0 {
-            println!("Positions:");
-            for (id, position) in self.positions.borrow().iter() {
-                println!("id: {:?}  {:?}", id, position.position);
+        let positions = self.positions.borrow();
+        let labels = self.labels.borrow();
+
+        let mut entities = std::collections::HashSet::new();
+
+        for e in positions.keys() {
+            entities.insert(e);
+        }
+
+        for e in labels.keys() {
+            entities.insert(e);
+        }
+
+        for entity in entities.iter() {
+            println!("{:?}", entity);
+            if let Some(position) = positions.get(entity) {
+                println!("  {:?}", position);
+            }
+            if let Some(label) = labels.get(entity) {
+                println!("  {:?}", label);
             }
         }
     }
@@ -95,6 +150,28 @@ pub struct BasicCoreApi {
 impl BasicCoreApi {
     pub fn new(core: Arc<Core>) -> Self {
         Self { core }
+    }
+
+    pub fn generic_write_components<T: bytemuck::Pod>(
+        mut dst: RefMut<HashMap<EntityId, T>>,
+        entities: &[EntityId],
+        data: &[u8],
+    ) {
+        let src: &[T] = bytemuck::cast_slice(data);
+        assert_eq!(src.len(), entities.len());
+
+        for (id, component) in entities.iter().zip(src.iter()) {
+            dst.insert(*id, *component);
+        }
+    }
+
+    pub fn generic_delete_components<T>(
+        mut dst: RefMut<HashMap<EntityId, T>>,
+        entities: &[EntityId],
+    ) {
+        for entity in entities.iter() {
+            dst.remove(entity);
+        }
     }
 }
 
@@ -116,35 +193,27 @@ impl ScriptApi for BasicCoreApi {
     }
 
     fn get_component_id(&self, name: &str) -> ScriptResult<ComponentId> {
-        // TODO implement component registry
-        assert_eq!(name, "position");
-
-        Ok(ComponentId(0))
+        match name {
+            "position" => Ok(ComponentId(0)),
+            "label" => Ok(ComponentId(1)),
+            _ => Err(()),
+        }
     }
 
     fn write_components(&mut self, component: ComponentId, entities: &[EntityId], data: &[u8]) {
-        // TODO implement component registry
-        assert_eq!(component.0, 0);
-
-        // TODO actually insert by entity id
-        // TODO cast to different component types
-        let positions: &[Position] = bytemuck::cast_slice(data);
-        assert_eq!(positions.len(), entities.len());
-
-        let mut dst = self.core.positions.borrow_mut();
-        for (id, component) in entities.iter().zip(positions.iter()) {
-            dst.insert(*id, *component);
-        }
+        match component.0 {
+            0 => Self::generic_write_components(self.core.positions.borrow_mut(), entities, data),
+            1 => Self::generic_write_components(self.core.labels.borrow_mut(), entities, data),
+            _ => println!("no component {:?}", component),
+        };
     }
 
     fn delete_components(&mut self, component: ComponentId, entities: &[EntityId]) {
-        // TODO implement component registry
-        assert_eq!(component.0, 0);
-
-        let mut components = self.core.positions.borrow_mut();
-        for entity in entities.iter() {
-            components.remove(entity);
-        }
+        match component.0 {
+            0 => Self::generic_delete_components(self.core.positions.borrow_mut(), entities),
+            1 => Self::generic_delete_components(self.core.labels.borrow_mut(), entities),
+            _ => println!("no component {:?}", component),
+        };
     }
 
     fn get_resource_id(&self, name: &str) -> ScriptResult<ResourceId> {
