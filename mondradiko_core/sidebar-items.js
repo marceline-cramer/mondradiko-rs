@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["BasicCoreApi",""],["Core",""],["EventType",""],["ResourceId",""]],"trait":[["ScriptApi",""],["ScriptInstance",""]],"type":[["EventHandler",""],["ScriptError",""],["ScriptResult",""]]});
+initSidebarItems({"mod":[["asset",""]],"struct":[["BasicCoreApi",""],["Core",""],["EventType",""],["ResourceId",""]],"trait":[["ScriptApi",""],["ScriptInstance",""]],"type":[["EventHandler",""],["ScriptError",""],["ScriptResult",""]]});

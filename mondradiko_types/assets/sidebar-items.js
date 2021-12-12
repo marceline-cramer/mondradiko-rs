@@ -1,1 +1,1 @@
-initSidebarItems({"mod":[["mesh",""]]});
+initSidebarItems({"mod":[["label",""],["mesh",""]]});
