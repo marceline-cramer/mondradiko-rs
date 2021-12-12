@@ -1,7 +1,20 @@
-pub struct AssetId(u32);
-pub struct AssetType(u32);
-pub struct ComponentId(u32);
-pub struct EntityId(u32);
+pub use bytemuck;
+
+#[derive(Clone, Copy, Debug, bytemuck::Pod, bytemuck::Zeroable)]
+#[repr(transparent)]
+pub struct AssetId(pub u32);
+
+#[derive(Clone, Copy, Debug, bytemuck::Pod, bytemuck::Zeroable)]
+#[repr(transparent)]
+pub struct AssetType(pub u32);
+
+#[derive(Clone, Copy, Debug, bytemuck::Pod, bytemuck::Zeroable)]
+#[repr(transparent)]
+pub struct ComponentId(pub u32);
+
+#[derive(Clone, Copy, Debug, bytemuck::Pod, bytemuck::Zeroable)]
+#[repr(transparent)]
+pub struct EntityId(pub u32);
 
 pub mod events {
     pub struct UpdateEvent {
@@ -12,10 +25,14 @@ pub mod events {
 pub mod components {
     use super::*;
 
+    #[derive(Clone, Copy, Debug, bytemuck::Pod, bytemuck::Zeroable)]
+    #[repr(C)]
     pub struct PositionComponent {
         pub position: [f32; 3],
     }
 
+    #[derive(Clone, Copy, Debug, bytemuck::Pod, bytemuck::Zeroable)]
+    #[repr(C)]
     pub struct MeshComponent {
         pub mesh: AssetId,
     }
