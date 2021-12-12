@@ -18,14 +18,14 @@ pub mod components {
 pub mod assets {
     pub mod mesh {
         pub struct Vertex {
-            position: [f32; 3],
+            pub position: [f32; 3],
         }
 
         pub type Index = u32;
 
         pub struct MeshAsset {
             pub vertices: Vec<Vertex>,
-            pub index: Vec<Vertex>,
+            pub indices: Vec<Index>,
         }
     }
 }

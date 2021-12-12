@@ -3,9 +3,17 @@
 version = 3
 
 [[package]]
+name = "mondradiko-core"
+version = "0.1.0"
+dependencies = [
+ "mondradiko-types",
+]
+
+[[package]]
 name = "mondradiko-rs"
 version = "0.1.0"
 dependencies = [
+ "mondradiko-core",
  "mondradiko-types",
 ]
 
