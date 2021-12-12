@@ -1,6 +1,7 @@
 use components::PositionComponent;
 use mondradiko_types::*;
 use std::cell::RefCell;
+use std::collections::HashMap;
 use std::sync::Arc;
 
 #[derive(Clone, Copy)]
@@ -24,6 +25,9 @@ pub trait ScriptApi {
 
     /// Retrieves an asset type by name
     fn get_asset_type(&self, name: &str) -> ScriptResult<AssetType>;
+
+    /// Retrieves a component ID by name
+    fn get_component_id(&self, name: &str) -> ScriptResult<ComponentId>;
 
     /// Writes components
     fn write_components(&mut self, component: ComponentId, entities: &[EntityId], data: &[u8]);
@@ -51,7 +55,7 @@ pub trait ScriptInstance {
 #[derive(Default)]
 pub struct Core {
     scripts: RefCell<Vec<Box<dyn ScriptInstance>>>,
-    positions: RefCell<Vec<PositionComponent>>,
+    positions: RefCell<HashMap<EntityId, PositionComponent>>,
 }
 
 impl Core {
@@ -72,8 +76,8 @@ impl Core {
 
         if self.positions.borrow().len() > 0 {
             println!("Positions:");
-            for position in self.positions.borrow().iter() {
-                println!("  {:?}", position.position);
+            for (id, position) in self.positions.borrow().iter() {
+                println!("id: {:?}  {:?}", id, position.position);
             }
         }
     }
@@ -103,6 +107,13 @@ impl ScriptApi for BasicCoreApi {
         unimplemented!()
     }
 
+    fn get_component_id(&self, name: &str) -> ScriptResult<ComponentId> {
+        // TODO implement component registry
+        assert_eq!(name, "position");
+
+        Ok(ComponentId(0))
+    }
+
     fn write_components(&mut self, component: ComponentId, entities: &[EntityId], data: &[u8]) {
         // TODO implement component registry
         assert_eq!(component.0, 0);
@@ -110,14 +121,22 @@ impl ScriptApi for BasicCoreApi {
         // TODO actually insert by entity id
         // TODO cast to different component types
         let positions: &[PositionComponent] = bytemuck::cast_slice(data);
-        self.core
-            .positions
-            .borrow_mut()
-            .extend_from_slice(positions);
+        assert_eq!(positions.len(), entities.len());
+
+        let mut dst = self.core.positions.borrow_mut();
+        for (id, component) in entities.iter().zip(positions.iter()) {
+            dst.insert(*id, *component);
+        }
     }
 
     fn delete_components(&mut self, component: ComponentId, entities: &[EntityId]) {
-        unimplemented!()
+        // TODO implement component registry
+        assert_eq!(component.0, 0);
+
+        let mut components = self.core.positions.borrow_mut();
+        for entity in entities.iter() {
+            components.remove(entity);
+        }
     }
 
     fn get_resource_id(&self, name: &str) -> ScriptResult<ResourceId> {
