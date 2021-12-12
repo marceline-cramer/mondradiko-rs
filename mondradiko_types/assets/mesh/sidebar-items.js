@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["MeshAsset",""],["Vertex",""]],"type":[["Index",""]]});

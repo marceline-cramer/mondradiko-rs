@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["AssetId",""],["AssetType",""],["ComponentId",""],["EntityId",""]],"trait":[["ScriptApi",""]],"type":[["EventHandler",""],["ScriptError",""],["ScriptResult",""]]});
+initSidebarItems({"struct":[["EventType",""],["ResourceId",""]],"trait":[["ScriptApi",""]],"type":[["EventHandler",""],["ScriptError",""],["ScriptResult",""]]});
