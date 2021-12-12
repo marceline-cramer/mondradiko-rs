@@ -52,25 +52,29 @@
 <span id="52">52</span>
 <span id="53">53</span>
 <span id="54">54</span>
+<span id="55">55</span>
+<span id="56">56</span>
 </pre><pre class="rust"><code><span class="kw">pub</span> <span class="kw">use</span> <span class="ident">bytemuck</span>;
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>, <span class="ident">bytemuck::Pod</span>, <span class="ident">bytemuck::Zeroable</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>, <span class="ident">Eq</span>, <span class="ident">Hash</span>, <span class="ident">PartialEq</span>, <span class="ident">bytemuck::Pod</span>, <span class="ident">bytemuck::Zeroable</span>)]</span>
 <span class="attribute">#[<span class="ident">repr</span>(<span class="ident">transparent</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">AssetId</span>(<span class="kw">pub</span> <span class="ident">u32</span>);
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>, <span class="ident">bytemuck::Pod</span>, <span class="ident">bytemuck::Zeroable</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>, <span class="ident">Eq</span>, <span class="ident">Hash</span>, <span class="ident">PartialEq</span>, <span class="ident">bytemuck::Pod</span>, <span class="ident">bytemuck::Zeroable</span>)]</span>
 <span class="attribute">#[<span class="ident">repr</span>(<span class="ident">transparent</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">AssetType</span>(<span class="kw">pub</span> <span class="ident">u32</span>);
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>, <span class="ident">bytemuck::Pod</span>, <span class="ident">bytemuck::Zeroable</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>, <span class="ident">Eq</span>, <span class="ident">Hash</span>, <span class="ident">PartialEq</span>, <span class="ident">bytemuck::Pod</span>, <span class="ident">bytemuck::Zeroable</span>)]</span>
 <span class="attribute">#[<span class="ident">repr</span>(<span class="ident">transparent</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ComponentId</span>(<span class="kw">pub</span> <span class="ident">u32</span>);
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>, <span class="ident">bytemuck::Pod</span>, <span class="ident">bytemuck::Zeroable</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>, <span class="ident">Eq</span>, <span class="ident">Hash</span>, <span class="ident">PartialEq</span>, <span class="ident">bytemuck::Pod</span>, <span class="ident">bytemuck::Zeroable</span>)]</span>
 <span class="attribute">#[<span class="ident">repr</span>(<span class="ident">transparent</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">EntityId</span>(<span class="kw">pub</span> <span class="ident">u32</span>);
 
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">events</span> {
+    <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>, <span class="ident">Eq</span>, <span class="ident">Hash</span>, <span class="ident">PartialEq</span>, <span class="ident">bytemuck::Pod</span>, <span class="ident">bytemuck::Zeroable</span>)]</span>
+    <span class="attribute">#[<span class="ident">repr</span>(<span class="ident">C</span>)]</span>
     <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">UpdateEvent</span> {
         <span class="comment">// TODO delta-time member</span>
     }
