@@ -1,8 +1,12 @@
-use components::PositionComponent;
+use components::Position;
 use mondradiko_types::*;
 use std::cell::RefCell;
 use std::collections::HashMap;
 use std::sync::Arc;
+
+pub mod asset;
+
+use asset::*;
 
 #[derive(Clone, Copy)]
 pub struct EventType(u32);
@@ -55,7 +59,8 @@ pub trait ScriptInstance {
 #[derive(Default)]
 pub struct Core {
     scripts: RefCell<Vec<Box<dyn ScriptInstance>>>,
-    positions: RefCell<HashMap<EntityId, PositionComponent>>,
+    positions: RefCell<HashMap<EntityId, Position>>,
+    asset_store: RefCell<AssetStore>,
 }
 
 impl Core {
@@ -100,11 +105,14 @@ impl ScriptApi for BasicCoreApi {
         id: AssetId,
         data: &[u8],
     ) -> ScriptResult<AssetId> {
-        unimplemented!()
+        self.core
+            .asset_store
+            .borrow_mut()
+            .load_asset(id, asset_type, data)
     }
 
     fn get_asset_type(&self, name: &str) -> ScriptResult<AssetType> {
-        unimplemented!()
+        self.core.asset_store.borrow().get_asset_type(name)
     }
 
     fn get_component_id(&self, name: &str) -> ScriptResult<ComponentId> {
@@ -120,7 +128,7 @@ impl ScriptApi for BasicCoreApi {
 
         // TODO actually insert by entity id
         // TODO cast to different component types
-        let positions: &[PositionComponent] = bytemuck::cast_slice(data);
+        let positions: &[Position] = bytemuck::cast_slice(data);
         assert_eq!(positions.len(), entities.len());
 
         let mut dst = self.core.positions.borrow_mut();
