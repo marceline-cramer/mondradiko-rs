@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["Label",""],["Mesh",""],["Position",""]]});
+initSidebarItems({"struct":[["Label",""],["Mesh",""],["Orientation",""],["PointLight",""],["Position",""]]});
