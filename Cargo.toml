@@ -5,10 +5,10 @@ edition = "2021"
 
 [workspace]
 members = [
-  "mondradiko-core",
-  "mondradiko-types",
+  "mondradiko/core",
+  "mondradiko/types",
 ]
 
 [dependencies]
-mondradiko-core = { path = "mondradiko-core" }
-mondradiko-types = { path = "mondradiko-types" }
+mondradiko-core = { path = "./mondradiko/core/" }
+mondradiko-types = { path = "./mondradiko/types/" }

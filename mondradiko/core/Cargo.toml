@@ -5,5 +5,5 @@ edition = "2021"
 
 [dependencies]
 bincode = "1.3.3"
-mondradiko-types = { path = "../mondradiko-types" }
+mondradiko-types = { path = "../types" }
 slab = "0.4.5"
