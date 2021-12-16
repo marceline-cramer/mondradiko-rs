@@ -64,7 +64,7 @@
     <span class="ident">entity</span>: <span class="ident">EntityId</span>,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">ScriptApi</span><span class="op">&gt;</span> <span class="ident">ExampleInstance</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">script::ComponentApi</span> <span class="op">+</span> <span class="ident">script::AssetApi</span><span class="op">&gt;</span> <span class="ident">ExampleInstance</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
     <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">index</span>: <span class="ident">u32</span>, <span class="kw-2">mut</span> <span class="ident">api</span>: <span class="ident">T</span>) -&gt; <span class="self">Self</span> {
         <span class="kw">let</span> <span class="ident">asset_type</span> <span class="op">=</span> <span class="ident">api</span>.<span class="ident">get_asset_type</span>(<span class="string">&quot;label&quot;</span>).<span class="ident">unwrap</span>();
         <span class="kw">let</span> <span class="ident">title</span> <span class="op">=</span> <span class="macro">format!</span>(<span class="string">&quot;Foobar {}&quot;</span>, <span class="ident">index</span>);
@@ -84,7 +84,7 @@
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">ScriptApi</span><span class="op">&gt;</span> <span class="ident">ScriptInstance</span> <span class="kw">for</span> <span class="ident">ExampleInstance</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">script::ComponentApi</span> <span class="op">+</span> <span class="ident">script::AssetApi</span><span class="op">&gt;</span> <span class="ident">script::Instance</span> <span class="kw">for</span> <span class="ident">ExampleInstance</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
     <span class="kw">fn</span> <span class="ident">handle_event</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">_event_type</span>: <span class="ident">EventType</span>, <span class="ident">_data</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) {
         <span class="kw">let</span> <span class="ident">component_id</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">api</span>.<span class="ident">get_component_id</span>(<span class="string">&quot;position&quot;</span>).<span class="ident">unwrap</span>();
         <span class="kw">let</span> <span class="ident">position</span> <span class="op">=</span> <span class="ident">components::Position</span> { <span class="ident">position</span>: [<span class="number">0.0</span>; <span class="number">3</span>] };
