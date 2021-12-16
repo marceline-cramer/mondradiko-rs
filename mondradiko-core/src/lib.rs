@@ -16,7 +16,9 @@ pub struct EventType(u32);
 
 pub struct ResourceId(u32);
 
+// TODO research #[derive(Error)] to make this work
 pub type ScriptError = ();
+
 pub type ScriptResult<T> = Result<T, ScriptError>;
 
 pub type EventHandler = Box<dyn FnMut(&[u8])>;

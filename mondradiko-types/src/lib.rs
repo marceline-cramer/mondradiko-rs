@@ -3,6 +3,8 @@ pub use bytemuck;
 use bytemuck::{Pod, Zeroable};
 use serde::{Deserialize, Serialize};
 
+// TODO use std::num::NonZero types for ID ints
+
 #[derive(Clone, Copy, Debug, Eq, Hash, PartialEq, Pod, Zeroable)]
 #[repr(transparent)]
 pub struct AssetId(pub u32);
@@ -40,6 +42,12 @@ pub mod components {
 
     #[derive(Clone, Copy, Debug, Pod, Zeroable)]
     #[repr(C)]
+    pub struct Orientation {
+        pub orientation: [f32; 4],
+    }
+
+    #[derive(Clone, Copy, Debug, Pod, Zeroable)]
+    #[repr(C)]
     pub struct Label {
         pub label: AssetId,
     }
@@ -48,6 +56,12 @@ pub mod components {
     #[repr(C)]
     pub struct Mesh {
         pub mesh: AssetId,
+    }
+
+    #[derive(Clone, Copy, Debug, Pod, Zeroable)]
+    #[repr(C)]
+    pub struct PointLight {
+        pub position: [f32; 3],
     }
 }
 
