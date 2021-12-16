@@ -7,7 +7,7 @@ struct ExampleInstance<T> {
     entity: EntityId,
 }
 
-impl<T: ScriptApi> ExampleInstance<T> {
+impl<T: script::ComponentApi + script::AssetApi> ExampleInstance<T> {
     fn new(index: u32, mut api: T) -> Self {
         let asset_type = api.get_asset_type("label").unwrap();
         let title = format!("Foobar {}", index);
@@ -27,7 +27,7 @@ impl<T: ScriptApi> ExampleInstance<T> {
     }
 }
 
-impl<T: ScriptApi> ScriptInstance for ExampleInstance<T> {
+impl<T: script::ComponentApi + script::AssetApi> script::Instance for ExampleInstance<T> {
     fn handle_event(&mut self, _event_type: EventType, _data: &[u8]) {
         let component_id = self.api.get_component_id("position").unwrap();
         let position = components::Position { position: [0.0; 3] };

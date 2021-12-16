@@ -8,6 +8,7 @@ use std::sync::Arc;
 use std::sync::Mutex;
 
 pub mod asset;
+pub mod script;
 
 use asset::*;
 
@@ -15,46 +16,6 @@ use asset::*;
 pub struct EventType(u32);
 
 pub struct ResourceId(u32);
-
-// TODO research #[derive(Error)] to make this work
-pub type ScriptError = ();
-
-pub type ScriptResult<T> = Result<T, ScriptError>;
-
-pub type EventHandler = Box<dyn FnMut(&[u8])>;
-
-pub trait ScriptApi {
-    /// Loads an asset
-    fn load_asset(&mut self, asset_type: AssetType, data: &[u8]) -> ScriptResult<AssetId>;
-
-    /// Retrieves an asset type by name
-    fn get_asset_type(&self, name: &str) -> ScriptResult<AssetType>;
-
-    /// Retrieves a component ID by name
-    fn get_component_id(&self, name: &str) -> ScriptResult<ComponentId>;
-
-    /// Writes components
-    fn write_components(&mut self, component: ComponentId, entities: &[EntityId], data: &[u8]);
-
-    /// Deletes components
-    fn delete_components(&mut self, component: ComponentId, entities: &[EntityId]);
-
-    /// Retrieves a resource ID by name
-    fn get_resource_id(&self, name: &str) -> ScriptResult<ResourceId>;
-
-    /// Writes a resource
-    fn write_resource(&mut self, id: ResourceId, data: &[u8]);
-
-    /// Retrieves an event type by name
-    fn get_event_type(&self, name: &str) -> ScriptResult<EventType>;
-
-    /// Registers an event handler
-    fn register_event_handler(&mut self, event_type: EventType, handler: EventHandler);
-}
-
-pub trait ScriptInstance {
-    fn handle_event(&mut self, event_type: EventType, data: &[u8]);
-}
 
 #[derive(Default)]
 struct LabelStore {
@@ -79,7 +40,7 @@ impl AssetLoader for LabelLoader {
 
 #[derive(Default)]
 pub struct Core {
-    scripts: RefCell<Vec<Box<dyn ScriptInstance>>>,
+    scripts: RefCell<Vec<Box<dyn script::Instance>>>,
     positions: RefCell<HashMap<EntityId, Position>>,
     labels: RefCell<HashMap<EntityId, Label>>,
     asset_store: RefCell<AssetStore>,
@@ -101,7 +62,7 @@ impl Core {
         core
     }
 
-    pub fn add_script(&self, script: Box<dyn ScriptInstance>) {
+    pub fn add_script(&self, script: Box<dyn script::Instance>) {
         self.scripts.borrow_mut().push(script);
     }
 
@@ -174,19 +135,21 @@ impl BasicCoreApi {
     }
 }
 
-impl ScriptApi for BasicCoreApi {
-    fn load_asset(&mut self, asset_type: AssetType, data: &[u8]) -> ScriptResult<AssetId> {
+impl script::AssetApi for BasicCoreApi {
+    fn get_asset_type(&self, name: &str) -> script::Result<AssetType> {
+        self.core.asset_store.borrow().get_asset_type(name)
+    }
+
+    fn load_asset(&mut self, asset_type: AssetType, data: &[u8]) -> script::Result<AssetId> {
         self.core
             .asset_store
             .borrow_mut()
             .load_asset(asset_type, data)
     }
+}
 
-    fn get_asset_type(&self, name: &str) -> ScriptResult<AssetType> {
-        self.core.asset_store.borrow().get_asset_type(name)
-    }
-
-    fn get_component_id(&self, name: &str) -> ScriptResult<ComponentId> {
+impl script::ComponentApi for BasicCoreApi {
+    fn get_component_id(&self, name: &str) -> script::Result<ComponentId> {
         match name {
             "position" => Ok(ComponentId(0)),
             "label" => Ok(ComponentId(1)),
@@ -209,20 +172,24 @@ impl ScriptApi for BasicCoreApi {
             _ => println!("no component {:?}", component),
         };
     }
+}
 
-    fn get_resource_id(&self, name: &str) -> ScriptResult<ResourceId> {
+impl script::ResourceApi for BasicCoreApi {
+    fn get_resource_id(&self, name: &str) -> script::Result<ResourceId> {
         unimplemented!()
     }
 
     fn write_resource(&mut self, id: ResourceId, data: &[u8]) {
         unimplemented!()
     }
+}
 
-    fn get_event_type(&self, name: &str) -> ScriptResult<EventType> {
+impl script::EventApi for BasicCoreApi {
+    fn get_event_type(&self, name: &str) -> script::Result<EventType> {
         unimplemented!()
     }
 
-    fn register_event_handler(&mut self, event_type: EventType, handler: EventHandler) {
+    fn register_event_handler(&mut self, event_type: EventType, handler: script::EventHandler) {
         unimplemented!()
     }
 }
