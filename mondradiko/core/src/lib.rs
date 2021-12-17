@@ -135,7 +135,7 @@ impl BasicCoreApi {
     }
 }
 
-impl script::AssetApi for BasicCoreApi {
+impl script::Api for BasicCoreApi {
     fn get_asset_type(&self, name: &str) -> script::Result<AssetType> {
         self.core.asset_store.borrow().get_asset_type(name)
     }
@@ -146,9 +146,7 @@ impl script::AssetApi for BasicCoreApi {
             .borrow_mut()
             .load_asset(asset_type, data)
     }
-}
 
-impl script::ComponentApi for BasicCoreApi {
     fn get_component_id(&self, name: &str) -> script::Result<ComponentId> {
         match name {
             "position" => Ok(ComponentId(0)),
@@ -172,9 +170,7 @@ impl script::ComponentApi for BasicCoreApi {
             _ => println!("no component {:?}", component),
         };
     }
-}
 
-impl script::ResourceApi for BasicCoreApi {
     fn get_resource_id(&self, name: &str) -> script::Result<ResourceId> {
         unimplemented!()
     }
@@ -182,9 +178,7 @@ impl script::ResourceApi for BasicCoreApi {
     fn write_resource(&mut self, id: ResourceId, data: &[u8]) {
         unimplemented!()
     }
-}
 
-impl script::EventApi for BasicCoreApi {
     fn get_event_type(&self, name: &str) -> script::Result<EventType> {
         unimplemented!()
     }
