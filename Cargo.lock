@@ -633,6 +633,7 @@ dependencies = [
 name = "mondradiko-wasmtime"
 version = "0.1.0"
 dependencies = [
+ "anyhow",
  "mondradiko-core",
  "wasmtime",
 ]

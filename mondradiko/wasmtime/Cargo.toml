@@ -1,0 +1,9 @@
+[package]
+name = "mondradiko-wasmtime"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+anyhow = "^1.0"
+mondradiko-core = { path = "../core/" }
+wasmtime = "0.32"
