@@ -1,5 +1,7 @@
 use super::*;
 
+use mockall::automock;
+
 // TODO research #[derive(Error)] to make this work
 pub type Error = ();
 
@@ -8,6 +10,7 @@ pub type Result<T> = std::result::Result<T, Error>;
 // TODO relocate to dedicated events module
 pub type EventHandler = Box<dyn FnMut(&[u8])>;
 
+#[automock]
 pub trait Api {
     fn get_asset_type(&self, name: &str) -> Result<AssetType>;
     fn load_asset(&mut self, asset_type: AssetType, data: &[u8]) -> Result<AssetId>;
@@ -20,6 +23,7 @@ pub trait Api {
     fn register_event_handler(&mut self, event_type: EventType, handler: EventHandler);
 }
 
+#[automock]
 pub trait Instance {
     fn handle_event(&mut self, event_type: EventType, data: &[u8]);
 }
