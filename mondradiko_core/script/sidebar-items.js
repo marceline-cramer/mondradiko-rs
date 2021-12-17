@@ -1,1 +1,1 @@
-initSidebarItems({"trait":[["AssetApi",""],["ComponentApi",""],["EventApi",""],["Instance",""],["ResourceApi",""]],"type":[["Error",""],["EventHandler",""],["Result",""]]});
+initSidebarItems({"mod":[["__mock_MockApi",""],["__mock_MockApi_Api",""],["__mock_MockInstance",""],["__mock_MockInstance_Instance",""]],"struct":[["MockApi",""],["MockInstance",""]],"trait":[["Api",""],["Instance",""]],"type":[["Error",""],["EventHandler",""],["Result",""]]});

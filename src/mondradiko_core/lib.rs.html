@@ -187,12 +187,6 @@
 <span id="187">187</span>
 <span id="188">188</span>
 <span id="189">189</span>
-<span id="190">190</span>
-<span id="191">191</span>
-<span id="192">192</span>
-<span id="193">193</span>
-<span id="194">194</span>
-<span id="195">195</span>
 </pre><pre class="rust"><code><span class="kw">pub</span> <span class="kw">use</span> <span class="ident">bincode</span>;
 
 <span class="kw">use</span> <span class="ident">components</span>::{<span class="ident">Label</span>, <span class="ident">Position</span>};
@@ -330,7 +324,7 @@
     }
 }
 
-<span class="kw">impl</span> <span class="ident">script::AssetApi</span> <span class="kw">for</span> <span class="ident">BasicCoreApi</span> {
+<span class="kw">impl</span> <span class="ident">script::Api</span> <span class="kw">for</span> <span class="ident">BasicCoreApi</span> {
     <span class="kw">fn</span> <span class="ident">get_asset_type</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">script::Result</span><span class="op">&lt;</span><span class="ident">AssetType</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">core</span>.<span class="ident">asset_store</span>.<span class="ident">borrow</span>().<span class="ident">get_asset_type</span>(<span class="ident">name</span>)
     }
@@ -341,9 +335,7 @@
             .<span class="ident">borrow_mut</span>()
             .<span class="ident">load_asset</span>(<span class="ident">asset_type</span>, <span class="ident">data</span>)
     }
-}
 
-<span class="kw">impl</span> <span class="ident">script::ComponentApi</span> <span class="kw">for</span> <span class="ident">BasicCoreApi</span> {
     <span class="kw">fn</span> <span class="ident">get_component_id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">script::Result</span><span class="op">&lt;</span><span class="ident">ComponentId</span><span class="op">&gt;</span> {
         <span class="kw">match</span> <span class="ident">name</span> {
             <span class="string">&quot;position&quot;</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">ComponentId</span>(<span class="number">0</span>)),
@@ -367,9 +359,7 @@
             <span class="kw">_</span> =&gt; <span class="macro">println!</span>(<span class="string">&quot;no component {:?}&quot;</span>, <span class="ident">component</span>),
         };
     }
-}
 
-<span class="kw">impl</span> <span class="ident">script::ResourceApi</span> <span class="kw">for</span> <span class="ident">BasicCoreApi</span> {
     <span class="kw">fn</span> <span class="ident">get_resource_id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">script::Result</span><span class="op">&lt;</span><span class="ident">ResourceId</span><span class="op">&gt;</span> {
         <span class="macro">unimplemented!</span>()
     }
@@ -377,9 +367,7 @@
     <span class="kw">fn</span> <span class="ident">write_resource</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">id</span>: <span class="ident">ResourceId</span>, <span class="ident">data</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) {
         <span class="macro">unimplemented!</span>()
     }
-}
 
-<span class="kw">impl</span> <span class="ident">script::EventApi</span> <span class="kw">for</span> <span class="ident">BasicCoreApi</span> {
     <span class="kw">fn</span> <span class="ident">get_event_type</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="ident">script::Result</span><span class="op">&lt;</span><span class="ident">EventType</span><span class="op">&gt;</span> {
         <span class="macro">unimplemented!</span>()
     }

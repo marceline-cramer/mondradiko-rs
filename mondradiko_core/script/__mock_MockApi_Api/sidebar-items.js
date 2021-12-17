@@ -1,0 +1,1 @@
+initSidebarItems({"mod":[["__delete_components",""],["__get_asset_type",""],["__get_component_id",""],["__get_event_type",""],["__get_resource_id",""],["__load_asset",""],["__register_event_handler",""],["__write_components",""],["__write_resource",""]]});
